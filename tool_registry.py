@@ -4,6 +4,7 @@ from tools.current_date import current_date
 from tools.weather import weather
 from tools.geocoder import geocoder
 from tools.files import read_file, write_file, list_files_in_directory, delete_file
+from tools.search import search
 
 tool_registry = {
     "calculator": calculator,
@@ -14,5 +15,6 @@ tool_registry = {
     "read_file": read_file,
     "write_file": write_file,
     "list_files_in_directory": list_files_in_directory,
-    "delete_file": delete_file
+    "delete_file": delete_file,
+    "search": search
 }

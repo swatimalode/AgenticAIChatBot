@@ -173,6 +173,42 @@ delete_file_tool = {
     }
 }
 
+search_tool = {
+    "type": "function",
+    "function": {
+        "name": "search",
+        "description": """
+            Search the internet for information.
+            Use this tool whenever the user asks for:
+            - current information
+            - recent information
+            - latest information
+            - upcoming events
+            - historical facts that need verification
+            - information that may have changed
+
+            After receiving search results:
+            1. Read the titles and snippets.
+            2. Identify which results directly answer the question.
+            3. Prefer authoritative and reputable sources.
+            4. Ignore irrelevant results.
+            5. If the results are insufficient or contradictory, search again
+            using a more specific query.
+            6. Never claim something is true if the search results do not
+            provide sufficient evidence.
+        """,
+        "parameters":{
+            "type": "object",
+            "properties": {
+                "search_query":{
+                    "type": "string",
+                    "description": "The query that needs to be search on internet"
+                }
+            }
+        }
+    }
+}
+
 tools = [
     calculator_tool,
     current_time_tool,
@@ -182,5 +218,6 @@ tools = [
     read_file_tool,
     write_file_tool,
     list_files_tool,
-    delete_file_tool
+    delete_file_tool,
+    search_tool
 ]
