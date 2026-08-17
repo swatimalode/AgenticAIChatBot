@@ -1,9 +1,9 @@
 from ddgs import DDGS
 
 
-def search(search_query):
+def search(query):
     results = DDGS().text(
-        search_query,
+        query,
         max_results=5
     )
 
@@ -17,6 +17,6 @@ def search(search_query):
         })
 
     return {
-        "query": search_query,
+        "query": query,
         "results": clean_results
     }

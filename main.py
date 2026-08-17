@@ -1,18 +1,16 @@
 from openai import OpenAI
-from config import BASE_URL, API_KEY, MODEL, MAX_MESSAGES
+from config import BASE_URL, API_KEY, MODEL, MAX_MESSAGES, SUMMERIZE_BATCH
 import json
 from tool_schemas import tools
 import tool_registry
-from memory.short_term_memory import shortTermMemory
+from memory.memory_manager import MemoryManager
 from utils.prompt import system_prompt
 
 client = OpenAI(base_url=BASE_URL, api_key=API_KEY)
 
-memory = shortTermMemory(max_message=MAX_MESSAGES)
+memory = MemoryManager(MAX_MESSAGES, SUMMERIZE_BATCH)
 
-messages = [system_prompt]
-
-messages.extend(memory.get_messages())
+messages = []
 
 while True:
 
@@ -21,7 +19,7 @@ while True:
     if user == "exit":
         break
     
-    memory.add({
+    memory.add_short_term({
         "role":"user",
         "content": user
     })
@@ -29,8 +27,20 @@ while True:
     print("\nAssistant: ", end="", flush=True)
 
     while True:
+        relevant_memories = memory.search_long_term(user)
 
-        messages = [system_prompt] + memory.get_messages()
+        long_term_data = [
+            {
+                "role": "system",
+                "content": (
+                    f"Remembered user information: "
+                    f"{mem['content']}"
+                )
+            }
+            for mem in relevant_memories
+        ]
+
+        messages = [system_prompt] + memory.get_short_term() + long_term_data
 
         response = client.chat.completions.create(
             model=MODEL,
@@ -75,7 +85,7 @@ while True:
                         tool_calls[index]["function"]["arguments"] += tool_call.function.arguments
 
         if finished_reason == "stop":
-            memory.add({
+            memory.add_short_term({
                 "role":"assistant",
                 "content": assistant_txt
             })
@@ -90,13 +100,13 @@ while True:
 
                 print("Tool Name:------------- ", [tool_calls[key]["function"]["name"]])
 
-                memory.add({
+                memory.add_short_term({
                     "role":"assistant",
                     "content":"",
                     "tool_calls":[tool_calls[key]]
                 })
 
-                memory.add({
+                memory.add_short_term({
                     "role":"tool",
                     "tool_call_id":tool_calls[key]["id"],
                     "content": str(result)
@@ -106,7 +116,7 @@ while True:
 print("\n------------------History ----------------\n",
       messages,
       "\n------------------ End -------------------\n",
-      "\n\n\n ---------------------------------------", memory.get_messages())
+      "\n\n\n ---------------------------------------")
 
 print("\n ---------------------------------------")
 print("\n          Good Bye !!!                  ")

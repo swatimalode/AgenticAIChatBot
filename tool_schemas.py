@@ -200,7 +200,7 @@ search_tool = {
         "parameters":{
             "type": "object",
             "properties": {
-                "search_query":{
+                "query":{
                     "type": "string",
                     "description": "The query that needs to be search on internet"
                 }
@@ -208,6 +208,42 @@ search_tool = {
         }
     }
 }
+
+save_memory_tool = {
+    "type": "function",
+    "function": {
+        "name": "save_memory",
+        "description": (
+            "Save important information about the user "
+            "that should be remembered in future conversations."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "description": "The information worth remembering."
+                },
+                "memory_type": {
+                    "type": "string",
+                    "enum": [
+                        "fact",
+                        "preference",
+                        "goal",
+                        "skill",
+                        "project"
+                    ],
+                    "description": "The type of memory."
+                }
+            },
+            "required": [
+                "content",
+                "memory_type"
+            ]
+        }
+    }
+}
+
 
 tools = [
     calculator_tool,
@@ -219,5 +255,6 @@ tools = [
     write_file_tool,
     list_files_tool,
     delete_file_tool,
-    search_tool
+    search_tool,
+    save_memory_tool
 ]

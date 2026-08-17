@@ -3,8 +3,8 @@ from utils.summerize import summerize
 class shortTermMemory:
 
     def __init__(self, max_message=10, summerize_batch=4):
-        self.max_message = int(max_message)
-        self.summerize_batch = int(summerize_batch)
+        self.max_message = max_message
+        self.summerize_batch = summerize_batch
         self.messages = []
 
     def add(self, message):

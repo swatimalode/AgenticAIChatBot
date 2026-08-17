@@ -5,6 +5,7 @@ from tools.weather import weather
 from tools.geocoder import geocoder
 from tools.files import read_file, write_file, list_files_in_directory, delete_file
 from tools.search import search
+from tools.save_memory import save_memory
 
 tool_registry = {
     "calculator": calculator,
@@ -16,5 +17,6 @@ tool_registry = {
     "write_file": write_file,
     "list_files_in_directory": list_files_in_directory,
     "delete_file": delete_file,
-    "search": search
+    "search": search,
+    "save_memory": save_memory
 }

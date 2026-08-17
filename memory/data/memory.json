@@ -1,0 +1,18 @@
+[
+    {
+        "type": "fact",
+        "content": "User's name is Swati"
+    },
+    {
+        "type": "fact",
+        "content": "User works at TCS (Tata Consultancy Services)"
+    },
+    {
+        "type": "fact",
+        "content": "User loves travel"
+    },
+    {
+        "type": "fact",
+        "content": "User used to work at Winjit"
+    }
+]
