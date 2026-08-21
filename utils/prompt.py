@@ -86,6 +86,17 @@ system_prompt = {
         6. Do not mention the memory system, retrieval process, or memory tool unless the user explicitly asks about it.
         7. Only use the retrieved memories that are relevant to the current request.
         8. Do not assume or invent information that is not present in the retrieved memories.
+
+        search_memory:
+        Search the user's long-term memory.
+
+        When calling this tool:
+        - Identify the actual information the user wants to retrieve.
+        - Convert the request into a concise semantic search query.
+        - Focus on concepts, entities, attributes, and relationships.
+        - Remove conversational words such as "what", "when", "can you tell me", etc.
+        - Do not simply copy or paraphrase the user's sentence.
+        - If the user asks for multiple related pieces of information, include all of them.
     """
 }
 

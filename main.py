@@ -27,20 +27,8 @@ while True:
     print("\nAssistant: ", end="", flush=True)
 
     while True:
-        relevant_memories = memory.search_long_term(user)
 
-        long_term_data = [
-            {
-                "role": "system",
-                "content": (
-                    f"Remembered user information: "
-                    f"{mem['content']}"
-                )
-            }
-            for mem in relevant_memories
-        ]
-
-        messages = [system_prompt] + memory.get_short_term() + long_term_data
+        messages = [system_prompt] + memory.get_short_term()
 
         response = client.chat.completions.create(
             model=MODEL,
@@ -93,7 +81,6 @@ while True:
 
         if finished_reason == "tool_calls":
             for key in tool_calls.keys():
-                print(tool_call)
                 arguments = json.loads(tool_calls[key]["function"]["arguments"])
                 function = tool_registry.tool_registry[tool_calls[key]["function"]["name"]]
                 result = function(**arguments)
@@ -115,8 +102,7 @@ while True:
 
 print("\n------------------History ----------------\n",
       messages,
-      "\n------------------ End -------------------\n",
-      "\n\n\n ---------------------------------------")
+      "\n------------------ End -------------------\n")
 
 print("\n ---------------------------------------")
 print("\n          Good Bye !!!                  ")

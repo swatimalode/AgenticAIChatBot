@@ -27,3 +27,6 @@ class MemoryManager:
 
     def search_long_term(self, query):
         return self.long_term.search(query)
+
+    def retrieve(self, query):
+        return self.long_term.retrieve(query)

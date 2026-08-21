@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
-#from config import MEMORY_PATH
-
+from config import MEMORY_PATH
+from utils.embedding import create_embedding
+from utils.similarity import cosine_similarity
 class LongTermMemory:
 
     def __init__(self):
-        self.file_path = Path('/Users/swatimalode/Documents/freelancing/AgenticAIChatBot/memory/data/memory.json')
+        self.file_path = Path(MEMORY_PATH)
         self.memories = []
         self._load()
 
@@ -75,3 +76,34 @@ class LongTermMemory:
         )
 
         return results
+
+    def retrieve(self, query, top_k=3):
+
+        query_embedding = create_embedding(query)
+
+        results = []
+
+        for memory in self.memories:
+
+            score = cosine_similarity(
+                query_embedding,
+                memory["embedding"]
+            )
+
+            results.append({
+                "content": memory["content"],
+                "score": score
+            })
+
+        results.sort(
+            key=lambda x: x["score"],
+            reverse=True
+        )
+        return results
+
+    def update(self, old_memory, new_memory):
+        print(old_memory, "-----------", new_memory)
+        for memory in self.memories:
+            if memory["content"] == old_memory["content"]:
+                memory["content"] = new_memory
+                memory["embedding"] = create_embedding(new_memory)

@@ -231,7 +231,13 @@ save_memory_tool = {
                         "preference",
                         "goal",
                         "skill",
-                        "project"
+                        "project",
+                        "identity",
+                        "job",
+                        "intrest",
+                        "hobby",
+                        "memories",
+                        "food"
                     ],
                     "description": "The type of memory."
                 }
@@ -239,6 +245,29 @@ save_memory_tool = {
             "required": [
                 "content",
                 "memory_type"
+            ]
+        }
+    }
+}
+
+retrieve_memory_tool = {
+    "type": "function",
+    "function": {
+        "name": "retrieve_memory",
+        "description": (
+            "Retrieves relevant information about the user "
+            "that users ask and we have alsready stored our memory"
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The information user asks for."
+                }
+            },
+            "required": [
+                "query"
             ]
         }
     }
@@ -256,5 +285,6 @@ tools = [
     list_files_tool,
     delete_file_tool,
     search_tool,
-    save_memory_tool
+    save_memory_tool,
+    retrieve_memory_tool
 ]
