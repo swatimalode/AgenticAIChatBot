@@ -85,8 +85,6 @@ while True:
                 function = tool_registry.tool_registry[tool_calls[key]["function"]["name"]]
                 result = function(**arguments)
 
-                print("Tool Name:------------- ", [tool_calls[key]["function"]["name"]])
-
                 memory.add_short_term({
                     "role":"assistant",
                     "content":"",

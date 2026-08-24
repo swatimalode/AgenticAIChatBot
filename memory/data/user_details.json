@@ -1,0 +1,32 @@
+[
+    {
+        "memory_type": "identity",
+        "details": {
+            "name": "Vijay"
+        }
+    },
+    {
+        "memory_type": "skill",
+        "details": {
+            "skill": "Blockchain"
+        }
+    },
+    {
+        "memory_type": "job",
+        "details": {
+            "previous_company": "Winjit"
+        }
+    },
+    {
+        "memory_type": "job",
+        "details": {
+            "company": "Infosys"
+        }
+    },
+    {
+        "memory_type": "skill",
+        "details": {
+            "language": "Python"
+        }
+    }
+]

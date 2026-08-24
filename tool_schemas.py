@@ -214,32 +214,27 @@ save_memory_tool = {
     "function": {
         "name": "save_memory",
         "description": (
-            "Save important information about the user "
-            "that should be remembered in future conversations."
+            "Save important concepts, technical details, decisions, or contextual "
+            "information from the conversation that should be referenced in future sessions."
         ),
         "parameters": {
             "type": "object",
             "properties": {
                 "content": {
                     "type": "string",
-                    "description": "The information worth remembering."
+                    "description": "The specific technical detail, concept, decision, or conversation point to remember."
                 },
                 "memory_type": {
                     "type": "string",
                     "enum": [
-                        "fact",
-                        "preference",
-                        "goal",
-                        "skill",
-                        "project",
-                        "identity",
-                        "job",
-                        "intrest",
-                        "hobby",
-                        "memories",
-                        "food"
+                        "technical_detail",
+                        "project_requirement",
+                        "decision_made",
+                        "topic_discussed",
+                        "action_item",
+                        "general_knowledge"
                     ],
-                    "description": "The type of memory."
+                    "description": "The category classification for this conversation detail."
                 }
             },
             "required": [
@@ -249,7 +244,6 @@ save_memory_tool = {
         }
     }
 }
-
 retrieve_memory_tool = {
     "type": "function",
     "function": {
@@ -273,6 +267,117 @@ retrieve_memory_tool = {
     }
 }
 
+save_user_details = {
+    "type": "function",
+    "function": {
+        "name": "save_user_details",
+        "description": (
+            "Save structured information about the user. "
+            "The assistant should use this tool when the user provides "
+            "personal details such as name, job, education, skills, goals, "
+            "preferences, hobbies, interests, projects, or other persistent facts."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "array",
+                    "description": "List of structured user details.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "memory_type": {
+                                "type": "string",
+                                "enum": [
+                                    "identity",
+                                    "education",
+                                    "job",
+                                    "preference",
+                                    "goal",
+                                    "skill",
+                                    "project",
+                                    "interest",
+                                    "hobby",
+                                    "memories",
+                                    "food",
+                                    "fact"
+                                ],
+                                "description": "Category of the user detail."
+                            },
+                            "details": {
+                                "type": "object",
+                                "description": (
+                                    "The actual user information as key-value pairs."
+                                ),
+                                "additionalProperties": True
+                            }
+                        },
+                        "required": [
+                            "memory_type",
+                            "details"
+                        ],
+                        "additionalProperties": False
+                    }
+                }
+            },
+            "required": [
+                "content"
+            ],
+            "additionalProperties": False
+        }
+    }
+}
+
+retrieve_user_details_tool = {
+    "type": "function",
+    "function": {
+        "name": "retrieve_user_details",
+        "description": (
+            "Retrieve structured information about the user from long-term "
+            "user memory. Use this when the user asks about their personal "
+            "details such as name, job, education, skills, goals, preferences, "
+            "projects, interests, hobbies, or other stored user information."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "memory_type": {
+                    "type": "string",
+                    "enum": [
+                        "identity",
+                        "education",
+                        "job",
+                        "preference",
+                        "goal",
+                        "skill",
+                        "project",
+                        "interest",
+                        "hobby",
+                        "memories",
+                        "food",
+                        "fact"
+                    ],
+                    "description": (
+                        "The category of user information to retrieve. "
+                        "For example, use 'identity' for name and 'job' "
+                        "for the user's employment information."
+                    )
+                },
+                "top_k": {
+                    "type": "integer",
+                    "description": "Maximum number of matching user details to return.",
+                    "default": 3,
+                    "minimum": 1,
+                    "maximum": 10
+                }
+            },
+            "required": [
+                "memory_type"
+            ],
+            "additionalProperties": False
+        }
+    }
+}
 
 tools = [
     calculator_tool,
@@ -286,5 +391,7 @@ tools = [
     delete_file_tool,
     search_tool,
     save_memory_tool,
-    retrieve_memory_tool
+    retrieve_memory_tool,
+    save_user_details,
+    retrieve_user_details_tool
 ]

@@ -7,6 +7,8 @@ from tools.files import read_file, write_file, list_files_in_directory, delete_f
 from tools.search import search
 from tools.save_memory import save_memory
 from tools.retrieve_memory import retrieve_memory
+from tools.save_user_details import save_user_details
+from tools.retrieve_user_details import retrieve_user_details
 
 tool_registry = {
     "calculator": calculator,
@@ -20,5 +22,7 @@ tool_registry = {
     "delete_file": delete_file,
     "search": search,
     "save_memory": save_memory,
-    "retrieve_memory": retrieve_memory
+    "retrieve_memory": retrieve_memory,
+    "save_user_details": save_user_details,
+    "retrieve_user_details": retrieve_user_details
 }

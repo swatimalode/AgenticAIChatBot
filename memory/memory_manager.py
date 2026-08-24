@@ -25,8 +25,11 @@ class MemoryManager:
     def clear_long_term(self):
         self.long_term.clear()
 
-    def search_long_term(self, query):
-        return self.long_term.search(query)
+    def retrieve_conversation(self, query):
+        return self.long_term.retrieve_conversation(query)
 
-    def retrieve(self, query):
-        return self.long_term.retrieve(query)
+    def retrieve_user_details(self, memory_type):
+        return self.long_term.retrieve_user_details(memory_type)
+
+    def update_user_details(self, memory_type, key, new_content):
+        self.long_term.update_user_details(memory_type, key, new_content)
