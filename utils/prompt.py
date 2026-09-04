@@ -212,25 +212,25 @@ system_prompt = {
 
         USER DETAILS UPDATE RULES:
 
-        You have an update_user_details tool for updating existing structured
-        information about the user.
+    You have an update_user_details tool for updating existing structured
+    information about the user.
 
-        Use update_user_details when the user provides new information that
-        changes or replaces a previously stored user detail.
+    Use update_user_details when the user provides new information that
+    changes or replaces a previously stored user detail.
 
-        The tool requires three values:
+    The tool requires three values:
 
-        1. memory_type
-        2. key
-        3. new_content
+    1. memory_type
+    2. key
+    3. new_content
 
-        The memory_type identifies the category of information.
+    The memory_type identifies the category of information.
 
-        The key identifies the specific attribute inside that category.
-        The key is dynamic and must be inferred from the user's message.
-        Do not assume that keys are predefined.
+    The key identifies the specific attribute inside that category.
+    The key is dynamic and must be inferred from the user's message.
+    Do not assume that keys are predefined.
 
-        The new_content is the new value that should replace the existing value.
+    The new_content is the new value that should replace the existing value.
     """
 }
 

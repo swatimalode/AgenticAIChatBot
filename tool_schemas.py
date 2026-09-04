@@ -258,10 +258,23 @@ retrieve_memory_tool = {
                 "query": {
                     "type": "string",
                     "description": "The information user asks for."
+                },
+                "memory_type": {
+                    "type": "string",
+                    "enum": [
+                        "technical_detail",
+                        "project_requirement",
+                        "decision_made",
+                        "topic_discussed",
+                        "action_item",
+                        "general_knowledge"
+                    ],
+                    "description": "The category classification for this conversation detail."
                 }
             },
             "required": [
-                "query"
+                "query",
+                "memory_type"
             ]
         }
     }

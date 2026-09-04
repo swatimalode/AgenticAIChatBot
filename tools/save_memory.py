@@ -1,25 +1,21 @@
 from memory.long_term_memory import LongTermMemory
 from utils.embedding import create_embedding
-from config import UPDATE_THRESHOLD
+import uuid
 
 long_term_memory = LongTermMemory()
 
 
 def save_memory(content, memory_type="fact"):
 
-    results = long_term_memory.retrieve_conversation(content)
+    embedding = create_embedding(content)
 
-    if len(results) > 0 and results[0]['score'] >= UPDATE_THRESHOLD:
-        long_term_memory.update_conversation(results[0], content)
-    else:    
-        embedding = create_embedding(content)
+    memory = {
+        "id": str(uuid.uuid4()),
+        "type": memory_type,
+        "content": content,
+        "embedding": embedding
+    }
 
-        memory = {
-            "type": memory_type,
-            "content": content,
-            "embedding": embedding
-        }
-
-        long_term_memory.add_conversation(memory)
+    long_term_memory.add_conversation(memory)
 
     return "Memory saved successfully."

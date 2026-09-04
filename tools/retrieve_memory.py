@@ -3,13 +3,7 @@ from config import MAX_MESSAGES, SUMMERIZE_BATCH, THRESHOLD
 
 memory = MemoryManager(MAX_MESSAGES, SUMMERIZE_BATCH)
 
-def retrieve_memory(query, top_k=3):
-    results = memory.retrieve_conversation(query)
+def retrieve_memory(query, memory_type, top_k=3):
+    results = memory.retrieve_conversation(query, memory_type)
 
-    # print(results)
-    relevant = [
-        memory
-        for memory in results[:top_k]
-        if float(memory["score"]) >= THRESHOLD
-    ]
-    return relevant
+    return results
