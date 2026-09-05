@@ -375,13 +375,6 @@ retrieve_user_details_tool = {
                         "For example, use 'identity' for name and 'job' "
                         "for the user's employment information."
                     )
-                },
-                "top_k": {
-                    "type": "integer",
-                    "description": "Maximum number of matching user details to return.",
-                    "default": 3,
-                    "minimum": 1,
-                    "maximum": 10
                 }
             },
             "required": [
