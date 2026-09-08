@@ -1,6 +1,3 @@
-Got it — you mean **raw `README.md` Markdown**, so you can copy it directly into the repository.
-
-````markdown
 # Agentic AI ChatBot
 
 A lightweight Python-based Agentic AI chatbot that integrates an LLM with tool calling, streaming responses, short-term memory, long-term memory, embeddings, ChromaDB, document chunking, and Retrieval-Augmented Generation (RAG).
