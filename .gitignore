@@ -216,6 +216,10 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
+# CromaDb
+chroma_db/
+files/
+
 # Streamlit
 .streamlit/secrets.toml
 <!DOCTYPE html>
