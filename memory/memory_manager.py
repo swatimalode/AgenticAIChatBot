@@ -33,3 +33,6 @@ class MemoryManager:
 
     def update_user_details(self, memory_type, key, new_content):
         self.long_term.update_user_details(memory_type, key, new_content)
+
+    def search_documnets(self, query):
+        return self.long_term.search_documents(query)

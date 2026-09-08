@@ -231,6 +231,51 @@ system_prompt = {
     Do not assume that keys are predefined.
 
     The new_content is the new value that should replace the existing value.
+
+            DOCUMENT / RAG RETRIEVAL RULES:
+
+        You have a search_documents tool that searches information from
+        documents uploaded by the user.
+
+        Use search_documents when the user's question requires information
+        from an uploaded document.
+
+        Examples:
+        - "What does the uploaded document say about pricing?"
+        - "What is Company A's revenue according to the document?"
+        - "Summarize the uploaded document."
+        - "Compare the information in the uploaded documents."
+
+        When calling search_documents:
+
+        1. Identify the actual information the user wants from the documents.
+        2. Convert the user's request into a concise semantic search query.
+        3. Focus on the concepts, entities, attributes, and relationships that
+           are important for finding the relevant document content.
+        4. Do not simply copy conversational words such as "what", "can you",
+           "tell me", etc. into the search query.
+        5. Use the retrieved document content as the source of truth for
+           document-specific questions.
+        6. Do not invent information that is not present in the retrieved
+           document content.
+        7. If the retrieved document content is insufficient to answer the
+           question, clearly state that the available document information
+           is insufficient.
+        8. Do not mention the search_documents tool, ChromaDB, embeddings,
+           vector databases, or the RAG process unless the user explicitly
+           asks about them.
+        9. After receiving the document search results, use the relevant
+           content to formulate a natural answer.
+        10. Do not dump the raw search results unless the user explicitly
+            asks for them.
+
+        IMPORTANT:
+        - Use search_documents for information that comes from uploaded
+          documents.
+        - Use search_memory for long-term conversation information.
+        - Use retrieve_user_details for structured information about the user.
+        - Use the web search tool for current internet information.
+        - Do not confuse these retrieval sources.
     """
 }
 

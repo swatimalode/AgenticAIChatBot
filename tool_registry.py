@@ -9,6 +9,7 @@ from tools.save_memory import save_memory
 from tools.retrieve_memory import retrieve_memory
 from tools.save_user_details import save_user_details
 from tools.retrieve_user_details import retrieve_user_details
+from tools.search_documents import search_documents
 
 tool_registry = {
     "calculator": calculator,
@@ -24,5 +25,6 @@ tool_registry = {
     "save_memory": save_memory,
     "retrieve_memory": retrieve_memory,
     "save_user_details": save_user_details,
-    "retrieve_user_details": retrieve_user_details
+    "retrieve_user_details": retrieve_user_details,
+    "search_documents": search_documents
 }

@@ -3,6 +3,6 @@ from config import MAX_MESSAGES, SUMMERIZE_BATCH
 
 memory = MemoryManager(MAX_MESSAGES, SUMMERIZE_BATCH)
 
-def retrieve_memory(query, memory_type, top_k=3):
-    results = memory.retrieve_conversation(query, memory_type)
+def search_documents(query):
+    results = memory.search_documnets(query)
     return results

@@ -250,7 +250,7 @@ retrieve_memory_tool = {
         "name": "retrieve_memory",
         "description": (
             "Retrieves relevant information about the user "
-            "that users ask and we have alsready stored our memory"
+            "that users ask and we have already stored our memory"
         ),
         "parameters": {
             "type": "object",
@@ -385,6 +385,30 @@ retrieve_user_details_tool = {
     }
 }
 
+search_documents_tool = {
+    "type": "function",
+    "function": {
+        "name": "search_documents",
+        "description": (
+            "Retrieves relevant information asked by user from document we stored"
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The information user asks for."
+                }
+            },
+            "required": [
+                "query"
+            ],
+            "additionalProperties": False
+        }
+    }
+}
+
+
 tools = [
     calculator_tool,
     current_time_tool,
@@ -399,5 +423,6 @@ tools = [
     save_memory_tool,
     retrieve_memory_tool,
     save_user_details,
-    retrieve_user_details_tool
+    retrieve_user_details_tool,
+    search_documents_tool
 ]

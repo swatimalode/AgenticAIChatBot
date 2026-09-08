@@ -12,6 +12,7 @@ class LongTermMemory:
         self.user_details = []
         # Conversation memories are stored in Chroma
         self.collection = get_collection("conversation_memory")
+        self.rag_collection = get_collection("rag_documents")
         self._load()
 
     def _load(self):
@@ -128,3 +129,10 @@ class LongTermMemory:
     def clear_user_details(self):
         self.user_details = []
         self._save_user_details()
+
+    def search_documents(self, query, top_k=3):
+        query_embedding = create_embedding(query)
+        results = self.rag_collection.query(
+            query_embeddings=[query_embedding],
+            n_results=top_k)
+        return results

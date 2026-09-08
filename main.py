@@ -5,10 +5,10 @@ from tool_schemas import tools
 import tool_registry
 from memory.memory_manager import MemoryManager
 from utils.prompt import system_prompt
-
-from fastapi import FastAPI
+from utils.chunker import store
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import HTMLResponse, StreamingResponse
-from pydantic import BaseModel
+# from pydantic import BaseModel
 
 
 client = OpenAI(
@@ -21,28 +21,25 @@ memory = MemoryManager(
     SUMMERIZE_BATCH
 )
 
-
 app = FastAPI()
-
-
-# -----------------------------
-# Request model
-# -----------------------------
-
-class ChatRequest(BaseModel):
-    message: str
-
 
 # -----------------------------
 # Your existing chatbot logic
 # -----------------------------
 
-def chat(user):
+def chat(message, file):
 
     memory.add_short_term({
-        "role": "user",
-        "content": user
-    })
+            "role": "user",
+            "content": message
+        })
+
+    if(file):
+        upload_status = store(file)
+        memory.add_short_term({
+                "role": "system",
+                "content": upload_status
+            })
 
     while True:
 
@@ -148,10 +145,12 @@ def chat(user):
 # -----------------------------
 
 @app.post("/chat")
-def chat_endpoint(request: ChatRequest):
+def chat_endpoint(message: str = Form(""), file: UploadFile | None = File(None)):
+
+    # return file
 
     return StreamingResponse(
-        chat(request.message),
+        chat(message, file),
         media_type="text/plain"
     )
 
@@ -176,19 +175,14 @@ def home():
 
     return """
     <!DOCTYPE html>
-
     <html>
 
     <head>
-
         <title>Swati's AI Chatbot</title>
-
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
         <style>
-
             body {
-                font-family: Arial;
+                font-family: Arial, sans-serif;
                 max-width: 800px;
                 margin: 40px auto;
                 padding: 20px;
@@ -211,21 +205,102 @@ def home():
                 margin: 10px 0 20px 0;
             }
 
-            input {
-                width: 75%;
-                padding: 12px;
-                font-size: 16px;
+            .input-container {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                height: 65px;
+                background: white;
+                border: 1px solid #444;
+                border-radius: 35px;
+                padding: 0 10px;
+                box-sizing: border-box;
+                gap: 8px; /* Added gap to prevent elements from crashing into each other */
             }
 
-            button {
-                padding: 12px 20px;
-                font-size: 16px;
+            .attach-button {
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 32px;
+                color: black;
+                cursor: pointer;
+                border-radius: 50%;
+                flex-shrink: 0;
             }
 
+            .attach-button:hover {
+                background: #eee; /* Changed to light gray so black text remains visible */
+            }
+
+            #message {
+                flex: 1;
+                height: 100%;
+                border: none;
+                outline: none;
+                background: transparent;
+                color: black;
+                font-size: 18px;
+                padding: 0 15px;
+            }
+
+            #message::placeholder {
+                color: #aaa;
+            }
+
+            /* Styled File Preview Chip */
+            .file-preview-chip {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background-color: #f1f3f4;
+                border-radius: 16px;
+                padding: 6px 12px;
+                font-size: 14px;
+                color: #3c4043;
+                max-width: 180px;
+                flex-shrink: 0;
+            }
+
+            .file-preview-chip span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .file-preview-chip button {
+                background: none;
+                border: none;
+                color: #5f6368;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 0;
+                line-height: 1;
+            }
+
+            .file-preview-chip button:hover {
+                color: #000;
+            }
+
+            .send-button {
+                width: 50px;
+                height: 50px;
+                border: none;
+                border-radius: 50%;
+                background: blue;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+            .send-button:hover {
+                background: #3875e8;
+            }
         </style>
-
     </head>
-
 
     <body>
 
@@ -233,97 +308,122 @@ def home():
 
         <div id="chat"></div>
 
-        <input
-            id="message"
-            type="text"
-            placeholder="Type your message..."
-        />
+        <div class="input-container">
 
-        <button onclick="sendMessage()">
-            Send
-        </button>
+            <label for="fileInput" class="attach-button">
+                +
+            </label>
+            <input type="file" id="fileInput" hidden>
 
+            <input
+                id="message"
+                type="text"
+                placeholder="Ask anything"
+            />
+
+            <!-- Dynamic file status element -->
+            <div id="filePreview" class="file-preview-chip" style="display: none;">
+                <span id="fileName"></span>
+                <button id="removeFile" type="button" onclick="clearFile()">×</button>
+            </div>
+
+            <button onclick="sendMessage()" class="send-button">
+                ➤
+            </button>
+
+        </div>
 
         <script>
+            const fileInput = document.getElementById("fileInput");
+            const filePreview = document.getElementById("filePreview");
+            const fileNameSpan = document.getElementById("fileName");
+            const messageInput = document.getElementById("message");
+            const chat = document.getElementById("chat");
+
+            // 1. Listen for file selection changes
+            fileInput.addEventListener("change", function() {
+                if (this.files && this.files.length > 0) {
+                    fileNameSpan.textContent = this.files[0].name;
+                    filePreview.style.display = "flex"; // Show chip
+                }
+            });
+
+            // 2. Clear out the selected file when the '×' button is clicked
+            function clearFile() {
+                fileInput.value = "";
+                filePreview.style.display = "none"; // Hide chip
+                fileNameSpan.textContent = "";
+            }
 
             async function sendMessage() {
+                const message = messageInput.value.trim();
+                const file = fileInput.files[0];
 
-                const input = document.getElementById("message");
-
-                const message = input.value.trim();
-
-                if (!message) {
+                // Don't send if both are empty
+                if (!message && !file) {
                     return;
                 }
 
-                const chat = document.getElementById("chat");
+                // Create FormData
+                const formData = new FormData();
+                formData.append("message", message);
+                if (file) {
+                    formData.append("file", file);
+                }
 
-                chat.innerHTML +=
-                    `<div class="user">You: ${message}</div>`;
+                // Show user's message
+                if (message) {
+                    chat.innerHTML += `<div class="user">You: ${message}</div>`;
+                }
+
+                // Show uploaded file
+                if (file) {
+                    chat.innerHTML += `<div class="user">📎 File: ${file.name}</div>`;
+                }
 
                 const assistantDiv = document.createElement("div");
-
                 assistantDiv.className = "assistant";
-
                 assistantDiv.innerHTML = "Assistant: ";
-
                 chat.appendChild(assistantDiv);
 
-                input.value = "";
+                // Clear inputs and reset file preview layout
+                messageInput.value = "";
+                clearFile();
 
+                chat.scrollTop = chat.scrollHeight;
+
+                // Send message + file together
                 const response = await fetch("/chat", {
-
                     method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        message: message
-                    })
-
+                    body: formData
                 });
 
                 const reader = response.body.getReader();
-
                 const decoder = new TextDecoder();
-
                 let assistantText = "";
 
                 while (true) {
-
                     const { value, done } = await reader.read();
-
                     if (done) {
                         break;
                     }
 
                     const chunk = decoder.decode(value, { stream: true });
-
                     assistantText += chunk;
 
-                    assistantDiv.innerHTML =
-                        "Assistant: " + marked.parse(assistantText);
-
+                    assistantDiv.innerHTML = "Assistant: " + marked.parse(assistantText);
                     chat.scrollTop = chat.scrollHeight;
                 }
             }
 
-            const input = document.getElementById("message");
-
-            input.addEventListener("keydown", function(event) {
-
+            messageInput.addEventListener("keydown", function(event) {
                 if (event.key === "Enter") {
                     event.preventDefault();
                     sendMessage();
                 }
-
             });
-
         </script>
 
     </body>
-
     </html>
     """
