@@ -40,7 +40,6 @@ def write_file(file_path, text):
             return f"Failed to write to {file_path}."
 
 def list_files_in_directory(directory_path):
-    print(f"Directory Path: '{directory_path}'")
     if not os.path.isdir(directory_path):
         return f"{directory_path} is not a valid directory."
     files = []
