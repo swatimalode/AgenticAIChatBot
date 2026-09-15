@@ -293,3 +293,16 @@ summerize_prompt = """
 
     Conversation:
     """
+
+def rag_prompt(context, user_message):
+    return f"""
+        Use the following context to answer the user's question.
+
+        Context:
+        {context}
+
+        Question:
+        {user_message}
+
+        If the answer cannot be found in the context, say that you don't know based on the provided documents.
+    """

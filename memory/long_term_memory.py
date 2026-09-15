@@ -71,7 +71,6 @@ class LongTermMemory:
 
             if distance <= THRESHOLD:
                 id = results["ids"][0][0]
-                print("updatating existing memory")
             
 
         self.collection.upsert(
